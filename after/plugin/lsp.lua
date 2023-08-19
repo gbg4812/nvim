@@ -9,6 +9,7 @@ lsp.ensure_installed({
     'html',
     'unocss',
     'arduino_language_server',
+    'texlab',
 })
 
 -- Fix Undefined global 'vim'
@@ -56,9 +57,13 @@ lsp.on_attach(function(client, bufnr)
 end)
 lsp.skip_server_setup({'null-ls'})
 
-require'lspconfig'.arduino_language_server.setup{
+require('lspconfig').arduino_language_server.setup{
     cmd = { "arduino-language-server", "-cli-config", "$env:localappdata/arduino15/arduino-cli.yaml" }
 }
+require('lspconfig').texlab.setup{
+    filetypes = { "xml", "xsd", "xsl", "xslt", "svg", "markdown" }
+}
+
 
 lsp.setup()
 
