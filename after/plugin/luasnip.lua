@@ -5,6 +5,7 @@ local fmt = require("luasnip.extras.fmt").fmt
 local fmta = require("luasnip.extras.fmt").fmta
 local rep = require("luasnip.extras").rep
 local i = ls.insert_node
+local t = ls.text_node
 
 
 -- Configure luasnip
@@ -45,14 +46,18 @@ vim.keymap.set("i", "<c-l>", function()
 end)
 
 -- resuource snippets file
-vim.keymap.set('n', "<leader><leader>s", "<cmd>source c:/users/guill/appdata/local/nvim/after/plugin/luasnip.lua<CR>")
+vim.keymap.set('n', "<leader><leader>s", "<cmd>source /home/gbg4812/.config/nvim/after/plugin/luasnip.lua<CR>")
 
 
 -- create snippets
 -- note taking snippets
 ls.add_snippets("markdown", {
-    s("mat", fmta("$$\n\\displaylines{\n<>\n}$$", { i(1, "default") })),
-    s("\\f", fmta("\\frac{<>}{<>}", { i(1, "numer"), i(2, "denom") }))
+    s("mat", fmta("$$\n<>\n$$", { i(1, "default") })),
+    s("\\f", fmta("\\frac{<>}{<>}", { i(1, "numer"), i(2, "denom") })),
+    s("\\s", fmta("\\sum_{<>}^{<>}", { i(1, "i=m"), i(2, "n") })),
+    s("a", t("$\\alpha$")),
+    s("b", t("$\\beta$")),
+    s("delta", t("$\\delta$")),
 }
 )
 
