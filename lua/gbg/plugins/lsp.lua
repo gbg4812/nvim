@@ -79,12 +79,12 @@ return {
         end)
         lsp.skip_server_setup({ 'null-ls' })
 
-        require('lspconfig').arduino_language_server.setup {
-            cmd = { "arduino-language-server", "-cli-config", "$env:localappdata/arduino15/arduino-cli.yaml" }
-        }
-        require('lspconfig').texlab.setup {
-            filetypes = { "xml", "xsd", "xsl", "xslt", "svg", "markdown" }
-        }
+        lsp.configure("texlab", {
+            filetypes = { "xml", "xsd", "xsl", "xslt", "svg", "markdown" },
+        })
+        lsp.configure("clangd", {
+            cmd = { "clangd" }
+        })
 
 
         lsp.setup()

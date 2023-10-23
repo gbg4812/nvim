@@ -1,7 +1,7 @@
 return {
     "L3MON4D3/LuaSnip",
     -- follow latest release.
-    version = "v2.*",     -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
     -- install jsregexp (optional!:).
     build = "make install_jsregexp",
     config = function()
@@ -53,7 +53,7 @@ return {
         end)
 
         -- resuource snippets file
-        vim.keymap.set('n', "<leader><leader>s", "<cmd>source /home/gbg4812/.config/nvim/after/plugin/luasnip.lua<CR>")
+        vim.keymap.set('n', "<leader><leader>s", "<cmd>source /home/gbg4812/.config/nvim/lua/gbg/plugins/luasnip.lua<CR>")
 
 
         -- create snippets
@@ -65,6 +65,7 @@ return {
             s("a", t("$\\alpha$")),
             s("b", t("$\\beta$")),
             s("delta", t("$\\delta$")),
+            s("cpp", fmt("```\n{}\n```", { i(1, "code") }))
         }
         )
 
