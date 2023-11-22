@@ -64,8 +64,10 @@ return {
             s("\\s", fmta("\\sum_{<>}^{<>}", { i(1, "i=m"), i(2, "n") })),
             s("a", t("$\\alpha$")),
             s("b", t("$\\beta$")),
-            s("delta", t("$\\delta$")),
-            s("cpp", fmt("```\n{}\n```", { i(1, "code") }))
+            s("d", t("$\\delta$")),
+            s("cod", fmt("```\n{}\n```", { i(1, "code") })),
+            s("cpp", fmt("```cpp\n{}\n```", { i(1, "code") })),
+
         }
         )
 
