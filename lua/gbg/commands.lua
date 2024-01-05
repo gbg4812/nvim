@@ -20,4 +20,3 @@ local startLiveServer = function(data)
 end
 
 vim.api.nvim_create_user_command("LSStart", startLiveServer, { nargs = 1, complete = "buffer" })
-

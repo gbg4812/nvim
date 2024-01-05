@@ -18,6 +18,7 @@ return {
         { 'hrsh7th/cmp-nvim-lsp' }, -- Required
         { 'L3MON4D3/LuaSnip' },     -- Required
     },
+
     config = function()
         local lsp = require('lsp-zero').preset('recommended')
         lsp.ensure_installed({
@@ -26,7 +27,6 @@ return {
             'rust_analyzer',
             'clangd',
             'pyright',
-            'ruff_lsp',
             'lua_ls',
             'html',
             'unocss',
