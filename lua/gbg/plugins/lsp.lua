@@ -1,22 +1,15 @@
 return {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'v2.x',
     dependencies = {
         -- LSP Support
-        { 'neovim/nvim-lspconfig' }, -- Required
-        {
-            -- Optional
-            'williamboman/mason.nvim',
-            build = function()
-                pcall(vim.cmd, 'MasonUpdate')
-            end
-        },
-        { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+        'neovim/nvim-lspconfig',             -- Required
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim', -- Optional
 
         -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },     -- Required
-        { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-        { 'L3MON4D3/LuaSnip' },     -- Required
+        'hrsh7th/nvim-cmp',     -- Required
+        'hrsh7th/cmp-nvim-lsp', -- Required
+        'L3MON4D3/LuaSnip',     -- Required
     },
 
     config = function()
@@ -32,11 +25,15 @@ return {
             'unocss',
             'arduino_language_server',
             'texlab',
+            'bashls',
         })
+
+        require 'lspconfig'.glsl_analyzer.setup {}
 
         -- Fix Undefined global 'vim'
         lsp.nvim_workspace()
 
+        -- Completation config
         local cmp = require('cmp')
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
         local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -55,12 +52,6 @@ return {
 
         lsp.set_preferences({
             suggest_lsp_servers = false,
-            sign_icons = {
-                error = 'E',
-                warn = 'W',
-                hint = 'H',
-                info = 'I'
-            }
         })
 
         lsp.on_attach(function(client, bufnr)
@@ -77,15 +68,11 @@ return {
             vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
             vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
         end)
-        lsp.skip_server_setup({ 'null-ls' })
+
 
         lsp.configure("texlab", {
             filetypes = { "xml", "xsd", "xsl", "xslt", "svg", "markdown" },
         })
-        lsp.configure("clangd", {
-            cmd = { "clangd" }
-        })
-
 
         lsp.setup()
 
