@@ -1,7 +1,5 @@
 return {
     "L3MON4D3/LuaSnip",
-    -- follow latest release.
-    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
     -- install jsregexp (optional!:).
     build = "make install_jsregexp",
     config = function()
@@ -14,9 +12,7 @@ return {
         local i = ls.insert_node
         local t = ls.text_node
 
-
         -- Configure luasnip
-
         ls.config.set_config {
             -- This allows you to go into the last snippet.
             history = true,
@@ -58,22 +54,22 @@ return {
 
         -- create snippets
         -- note taking snippets
-        ls.add_snippets("markdown", {
-            s("mat", fmta("$$\n<>\n$$", { i(1, "default") })),
-            s("\\f", fmta("\\frac{<>}{<>}", { i(1, "numer"), i(2, "denom") })),
-            s("\\s", fmta("\\sum_{<>}^{<>}", { i(1, "i=m"), i(2, "n") })),
-            s("a", t("$\\alpha$")),
-            s("b", t("$\\beta$")),
-            s("d", t("$\\delta$")),
-            s("cod", fmt("```\n{}\n```", { i(1, "code") })),
-            s("cpp", fmt("```cpp\n{}\n```", { i(1, "code") })),
+        ls.add_snippets("markdown",
+            {
+                s("mat", fmta("$$\n<>\n$$", { i(1, "default") })),
+                s("\\f", fmta("\\frac{<>}{<>}", { i(1, "numer"), i(2, "denom") })),
+                s("\\s", fmta("\\sum_{<>}^{<>}", { i(1, "i=m"), i(2, "n") })),
+                s("a", t("$\\alpha$")),
+                s("b", t("$\\beta$")),
+                s("d", t("$\\delta$")),
+                s("cod", fmt("```\n{}\n```", { i(1, "code") })),
+                s("cpp", fmt("```cpp\n{}\n```", { i(1, "code") })),
 
-        }
-        )
+            })
 
-        ls.add_snippets("lua", {
-            s("req", fmt("local {} = require('{}')", { i(1, "default"), rep(1) })),
-        }
-        )
+        ls.add_snippets("lua",
+            {
+                s("req", fmt("local {} = require('{}')", { i(1, "default"), rep(1) })),
+            })
     end,
 }

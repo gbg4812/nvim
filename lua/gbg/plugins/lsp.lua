@@ -1,84 +1,104 @@
 return {
-    'VonHeikemen/lsp-zero.nvim',
+    "neovim/nvim-lspconfig",
     dependencies = {
-        -- LSP Support
-        'neovim/nvim-lspconfig',             -- Required
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim', -- Optional
+        "williamboman/mason-lspconfig.nvim",
+        "williamboman/mason.nvim",
 
-        -- Autocompletion
-        'hrsh7th/nvim-cmp',     -- Required
-        'hrsh7th/cmp-nvim-lsp', -- Required
-        'L3MON4D3/LuaSnip',     -- Required
+        -- cmp and its sources
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-cmdline",
+        "hrsh7th/cmp-emoji",
+        "hrsh7th/nvim-cmp",
+        "hrsh7th/cmp-nvim-lua",
+        "saadparwaiz1/cmp_luasnip",
+        "j-hui/fidget.nvim",
+        { "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
     },
 
     config = function()
-        local lsp = require('lsp-zero').preset('recommended')
-        lsp.ensure_installed({
-            'tsserver',
-            'eslint',
-            'rust_analyzer',
-            'clangd',
-            'pyright',
-            'lua_ls',
-            'html',
-            'unocss',
-            'arduino_language_server',
-            'texlab',
-            'bashls',
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+        require('fidget').setup {};
+        require('mason').setup({})
+        require('mason-lspconfig').setup({
+            ensure_installed = {
+                "lua_ls",
+                "clangd",
+                "pyright",
+                "bashls",
+                "ruff_lsp",
+            },
+            handlers = {
+                function(server_name)
+                    require("lspconfig")[server_name].setup {
+                        capabilities = capabilities
+                    }
+                end,
+                -- making vim a global variable
+                ['lua_ls'] = function()
+                    require("lspconfig").lua_ls.setup({
+                        settings = {
+                            Lua = {
+                                diagnostics = { globals = { "vim" } },
+                                workspace = {
+                                    -- Make the server aware of Neovim runtime files
+                                    library = vim.api.nvim_get_runtime_file('', true),
+                                },
+                            }
+                        },
+                        capabilities = capabilities
+                    })
+                end,
+            }
         })
+        require("lspconfig").glsl_analyzer.setup {
+            capabilities = capabilities
+        }
 
-        require 'lspconfig'.glsl_analyzer.setup {}
-
-        -- Fix Undefined global 'vim'
-        lsp.nvim_workspace()
-
-        -- Completation config
         local cmp = require('cmp')
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
-        local cmp_mappings = lsp.defaults.cmp_mappings({
-            ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-            ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-            ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-            ["<C-Space>"] = cmp.mapping.complete(),
-        })
+        local select_opts = { behavior = cmp.SelectBehavior.Select }
 
-        cmp_mappings['<Tab>'] = nil
-        cmp_mappings['<S-Tab>'] = nil
+        cmp.setup {
+            formatting = {
+                fields = { 'menu', 'abbr', 'kind' },
+                format = function(entry, item)
+                    local menu_icon = {
+                        nvim_lsp = 'λ',
+                        luasnip = '⋗',
+                        buffer = 'Ω',
+                        path = '🖫',
+                    }
 
-        lsp.setup_nvim_cmp({
-            mapping = cmp_mappings
-        })
+                    item.menu = menu_icon[entry.source.name]
+                    return item
+                end,
+            },
 
-        lsp.set_preferences({
-            suggest_lsp_servers = false,
-        })
+            snippet = {
+                expand = function(args)
+                    require('luasnip').lsp_expand(args.body)
+                end
+            },
 
-        lsp.on_attach(function(client, bufnr)
-            local opts = { buffer = bufnr, remap = false }
+            sources = {
+                { name = 'luasnip' },
+                { name = 'nvim_lsp' },
+                { name = 'buffer' },
+                { name = 'emoji' },
+            },
 
-            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-            vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-            vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-            vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-            vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-            vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-            vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-            vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-            vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-            vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        end)
-
-
-        lsp.configure("texlab", {
-            filetypes = { "xml", "xsd", "xsl", "xslt", "svg", "markdown" },
-        })
-
-        lsp.setup()
+            mapping = cmp.mapping.preset.insert({
+                ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
+                ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
+                ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+                ["<C-Space>"] = cmp.mapping.complete(),
+            })
+        }
 
         vim.diagnostic.config({
-            virtual_text = true
+            virtual_text = true,
+            update_on_insert = true,
         })
     end,
-
 }
