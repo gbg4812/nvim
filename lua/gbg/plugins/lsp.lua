@@ -50,6 +50,12 @@ return {
                         capabilities = capabilities
                     })
                 end,
+                ['clangd'] = function()
+                    require("lspconfig").clangd.setup {
+                        capabilities = capabilities,
+                        cmd = { "clangd", "-header-insertion=never" },
+                    }
+                end
             }
         })
         require("lspconfig").glsl_analyzer.setup {
