@@ -28,6 +28,7 @@ return {
                 "pyright",
                 "bashls",
                 "ruff_lsp",
+                "cmake",
             },
             handlers = {
                 function(server_name)
