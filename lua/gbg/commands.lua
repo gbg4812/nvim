@@ -24,7 +24,7 @@ vim.api.nvim_create_user_command("LSStart", startLiveServer, { nargs = 1, comple
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
     callback = function(ev)
-        local opts = { buffer = ev.buff }
+        local opts = { buffer = ev.buff, desc = "lsp keymap" }
 
         vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
         vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
