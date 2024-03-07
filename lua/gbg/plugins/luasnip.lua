@@ -71,5 +71,9 @@ return {
             {
                 s("req", fmt("local {} = require('{}')", { i(1, "default"), rep(1) })),
             })
+        ls.add_snippets("cpp",
+            {
+                s("log", fmt('cout <<" value of {} is "<< {} << endl', { i(1, "default"), rep(1)})),
+            })
     end,
 }
