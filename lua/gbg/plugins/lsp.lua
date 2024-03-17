@@ -42,10 +42,6 @@ return {
                         settings = {
                             Lua = {
                                 diagnostics = { globals = { "vim" } },
-                                workspace = {
-                                    -- Make the server aware of Neovim runtime files
-                                    library = vim.api.nvim_get_runtime_file('', true),
-                                },
                             }
                         },
                         capabilities = capabilities
@@ -102,6 +98,13 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(),
             })
         }
+
+        -- configure nvim cmp to complete pairs
+        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+        cmp.event:on(
+            'confirm_done',
+            cmp_autopairs.on_confirm_done()
+        )
 
         vim.diagnostic.config({
             virtual_text = true,
