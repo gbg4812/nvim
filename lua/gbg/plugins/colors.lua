@@ -5,6 +5,5 @@ return {
         vim.cmd('colorscheme rose-pine')
     end,
     opts = {
-        disable_background = false,
     }
 }
